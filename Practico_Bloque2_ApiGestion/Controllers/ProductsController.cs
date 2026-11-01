@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Practico_Bloque2_ApiGestion.Services;
-using Practico_Bloque1_Gestor.Models;
-using Practico_Bloque2_ApiGestion.DTOs;
+using Practico_Bloque2_ApiGestion_TheBusinessLayer.Services;
+using Practico_Bloque2_ApiGestion.Models;
+using Practico_Bloque2_ApiGestion_TheBusinessLayer.DTOs;
 
 namespace Practico_Bloque2_ApiGestion.Controllers
 {
@@ -22,17 +22,17 @@ namespace Practico_Bloque2_ApiGestion.Controllers
 
         //Create
         [HttpPost]
-        public IActionResult CreateProduct([FromBody] ProductDTO productDTO)
+        public IActionResult CreateProduct([FromBody] ProductCreateDTO productDTO)
         {
-            var newProduct = new ProductDTO
+            var newProduct = new Product
             {
                 Name = productDTO.Name,
                 Price = productDTO.Price,
                 Category = productDTO.Category,
-                Active = productDTO.Active
+                Active = true
             };
 
-            _productService.Add(newProduct);
+            _productService.AddProduct(newProduct);
 
             return Ok(newProduct);
         }
@@ -42,55 +42,72 @@ namespace Practico_Bloque2_ApiGestion.Controllers
         public IActionResult GetAll()
         {
             var products = _productService.GetAll();
+
             return Ok(products);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetById(int id)
         {
-            var product = _productService.GetById(id);
-            if (product == null)
+            ProductDTO productDTO;
+            try
             {
-                return NotFound();
+                productDTO = _productService.GetById(id);
             }
-            return Ok(product);
+            //generalmente lanzan dos tipos de excepciones: KeyNotFoundException y ArgumentException.
+            //Se pueden capturar ambas en un bloque try-catch.
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex) //este excepcion debe ir siempre al final y es opcional
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(productDTO);
         }
 
         //Read by Category
         [HttpGet("{category:string}")]
         public IActionResult GetByCategory(string category)
         {
-            var books = _productService.GetByCategory(category);
-            return Ok(books);
+            var products = _productService.GetByCategory(category);
+            return Ok(products);
         }
 
         //Update
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, [FromBody] ProductDTO productDTO)
+        public IActionResult UpdateProduct(int id, [FromBody] ProductCreateDTO product)
         {
             var existingProduct = _productService.GetById(id);
             if (existingProduct == null)
             {
                 return NotFound();
             }
-            existingProduct.Name = productDTO.Name;
-            existingProduct.Price = productDTO.Price;
-            existingProduct.Category = productDTO.Category;
-            existingProduct.Active = productDTO.Active;
-            _productService.Add(existingProduct);
-            return Ok(existingProduct);
+            else
+            {
+                _productService.UpdateProduct(id, product);
+                return NoContent();
+            }
+            
         }
 
         //Delete
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            var product = _productService.GetById(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                _productService.DeleteProduct(id);
             }
-            _productService.DeleteProduct(id);
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
             return NoContent();
         }
     }

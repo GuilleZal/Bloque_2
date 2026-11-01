@@ -1,15 +1,14 @@
-﻿using Practico_Bloque1_Gestor.Models;
+﻿using Practico_Bloque2_ApiGestion.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Practico_Bloque1_Gestor.Repositories
+namespace Practico_Bloque2_ApiGestion.Repositories
 {
-    internal class ProductRepository : IProductRepository
+    public class ProductRepository : IProductRepository
     {
         // Utilizar una List<Producto> privada para almacenar los registros de forma temporal.
         private readonly List<Product> _products;
-        
 
         public ProductRepository()
         {
@@ -21,11 +20,22 @@ namespace Practico_Bloque1_Gestor.Repositories
             new Product { Id = 4, Name = "Producto 4", Price = 15.49m, Category = "Lacteos", Active = true }
             };
         }
-        public void Add(Product product)
+        public void AddProduct(Product product)
         {
+            
+            product.Id = _products.Max(p => p.Id) + 1;
             _products.Add(product);
         }
-        
+
+        public void DeleteProduct(int id)
+        {
+            var product = _products.FirstOrDefault(p => p.Id == id);
+            if (product != null)
+            {
+                _products.Remove(product);
+            }
+        }
+
         public List<Product> GetAll()
         {
             return _products;
@@ -39,6 +49,18 @@ namespace Practico_Bloque1_Gestor.Repositories
         public Product GetById(int id)
         {
             return _products.FirstOrDefault(p => p.Id == id);
+        }
+
+        //no estoy seguro si debe ir id como parametro pero en el product service
+        //no tengo forma de obtener el id ya que el productDTO no tiene id, entonces lo dejo asi por ahora
+        public void UpdateProduct(int id, Product product)
+        {
+            var existingProduct = _products.FirstOrDefault(p => p.Id == id);
+            if (existingProduct != null)
+            {
+                _products.Remove(existingProduct);
+                _products.Add(product);
+            }
         }
     }
 }

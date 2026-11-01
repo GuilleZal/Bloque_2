@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Practico_Bloque1_Gestor.Models
+namespace Practico_Bloque2_ApiGestion.Models
 {
     public class Product
     {
