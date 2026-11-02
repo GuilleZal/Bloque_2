@@ -19,6 +19,7 @@ namespace Bloque2_BusinessLayer.Services
             var products = _productRepository.GetAll();
             var productsDTOs = products.Select(p => new ProductDTO
             {
+                Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Category = p.Category,
@@ -40,6 +41,7 @@ namespace Bloque2_BusinessLayer.Services
             }
             var productDTO = new ProductDTO
             {
+                Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
                 Category = product.Category,
@@ -52,6 +54,7 @@ namespace Bloque2_BusinessLayer.Services
             var products = _productRepository.GetByCategory(category);
             var productsDTOs = products.Select(p => new ProductDTO
             {
+                Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Category = p.Category,
@@ -59,8 +62,7 @@ namespace Bloque2_BusinessLayer.Services
             }).ToList();
             return productsDTOs;
         }
-
-        public void AddProduct(ProductCreateDTO productCreateDTO)
+        public ProductDTO AddProduct(ProductCreateDTO productCreateDTO)
         {
             if (productCreateDTO == null)
             {
@@ -78,8 +80,15 @@ namespace Bloque2_BusinessLayer.Services
                 Active = true
             };
             _productRepository.AddProduct(newProduct);
+            return new ProductDTO
+            {
+                Id = newProduct.Id,
+                Name = newProduct.Name,
+                Price = newProduct.Price,
+                Category = newProduct.Category,
+                Active = newProduct.Active
+            };
         }
-
         public void UpdateProduct(int Id, ProductCreateDTO productCreateDTO)
         {
             
@@ -120,7 +129,7 @@ namespace Bloque2_BusinessLayer.Services
             var existingProduct = _productRepository.GetById(id);
             if (existingProduct == null)
             {
-                throw new ArgumentException("El producto no existe", nameof(id));
+                throw new ArgumentException($"El producto con id '{id}' no existe");
             }
             _productRepository.DeleteProduct(id);
         }

@@ -5,11 +5,11 @@ namespace Bloque2_BusinessLayer.Services
 {
     public interface IProductService
     {
-        void AddProduct(ProductCreateDTO product);
+        ProductDTO AddProduct(ProductCreateDTO product);
         List<ProductDTO> GetAll();
         ProductDTO GetById(int id);
         List<ProductDTO> GetByCategory(string category);
-        void UpdateProduct(int id, ProductCreateDTO product);
+        void UpdateProduct(int id, ProductCreateDTO productCreateDTO);
         void DeleteProduct(int id);
     }
 }

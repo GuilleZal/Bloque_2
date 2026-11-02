@@ -6,7 +6,7 @@ using Bloque2_BusinessLayer.DTOs;
 namespace Bloque2_PresentationLayer.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/productos")]
     public class ProductController : ControllerBase
     {
 
@@ -63,11 +63,12 @@ namespace Bloque2_PresentationLayer.Controllers
 
         //Create
         [HttpPost]
-        public IActionResult CreateProduct([FromBody] ProductCreateDTO productDTO)
+        public IActionResult CreateProduct([FromBody] ProductCreateDTO productCreateDTO)
         {
+            ProductDTO productDTO = null!;
             try
             {
-                _productService.AddProduct(productDTO);
+                productDTO = _productService.AddProduct(productCreateDTO);
             }
             catch (ArgumentNullException ex)
             {
@@ -81,17 +82,17 @@ namespace Bloque2_PresentationLayer.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            return Ok(productDTO);
+            return CreatedAtAction(nameof(GetById), new { id = productDTO.Id }, productDTO);
+
         }
 
         //Update
         [HttpPut("{id}")]
         public IActionResult UpdateProduct(int id, [FromBody] ProductCreateDTO productCreateDTO)
         {
-
             try
             {
-                var existingProduct = _productService.GetById(id);
+                _productService.UpdateProduct(id, productCreateDTO);    
             }
             catch (KeyNotFoundException ex)
             {
@@ -101,11 +102,11 @@ namespace Bloque2_PresentationLayer.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
-            return Ok();
+            return Ok(productCreateDTO);
         }
 
         //Delete
