@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/BL/">
+    <Project Path="Practico_Bloque2_ApiGestion_TheBusinessLayer/Bloque2_BusinessLayer.csproj" Id="fe2c07e8-1e76-45e3-a526-56c02bdb2efa" />
+  </Folder>
+  <Folder Name="/DAL/">
+    <Project Path="Bloque2_DataAccessLayer/Bloque2_DataAccessLayer.csproj" Id="e7b8781f-e6db-4681-9a9f-68b3c649db0b" />
+  </Folder>
+  <Folder Name="/PL/">
+    <Project Path="Practico_Bloque2_ApiGestion/Bloque2_PresentationLayer.csproj" />
+  </Folder>
+</Solution>

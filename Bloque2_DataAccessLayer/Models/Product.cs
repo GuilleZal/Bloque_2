@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Practico_Bloque2_ApiGestion.Models
+namespace Bloque2_DataAccessLayer.Models
 {
     public class Product
     {

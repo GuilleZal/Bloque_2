@@ -1,4 +1,4 @@
-﻿namespace Practico_Bloque2_ApiGestion_TheBusinessLayer.DTOs
+﻿namespace Bloque2_BusinessLayer.DTOs
 {
     public class ProductDTO
     {

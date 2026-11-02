@@ -1,9 +1,9 @@
-﻿using Practico_Bloque2_ApiGestion.Models;
+﻿using Bloque2_DataAccessLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Practico_Bloque2_ApiGestion.Repositories
+namespace Bloque2_DataAccessLayer.Repositories
 {
     public interface IProductRepository
     {
@@ -16,6 +16,6 @@ namespace Practico_Bloque2_ApiGestion.Repositories
         List<Product> GetByCategory(string category);
 
         void DeleteProduct(int id);
-        void UpdateProduct(int id, Product product);
+        void UpdateProduct(Product product);
     }
 }

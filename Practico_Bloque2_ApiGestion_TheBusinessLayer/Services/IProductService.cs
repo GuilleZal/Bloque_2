@@ -1,7 +1,7 @@
-﻿using Practico_Bloque2_ApiGestion.Models;
-using Practico_Bloque2_ApiGestion_TheBusinessLayer.DTOs;
+﻿//using Bloque2_DataAccessLayer.Models;
+using Bloque2_BusinessLayer.DTOs;
 
-namespace Practico_Bloque2_ApiGestion_TheBusinessLayer.Services
+namespace Bloque2_BusinessLayer.Services
 {
     public interface IProductService
     {

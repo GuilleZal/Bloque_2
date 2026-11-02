@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Practico_Bloque2_ApiGestion_TheBusinessLayer.Services;
-using Practico_Bloque2_ApiGestion.Models;
-using Practico_Bloque2_ApiGestion_TheBusinessLayer.DTOs;
+using Bloque2_BusinessLayer.Services;
+using Bloque2_DataAccessLayer.Models;
+using Bloque2_BusinessLayer.DTOs;
 
-namespace Practico_Bloque2_ApiGestion.Controllers
+namespace Bloque2_PresentationLayer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -20,29 +20,11 @@ namespace Practico_Bloque2_ApiGestion.Controllers
 
         //expone los endpoints HTTP y retorna IActionResult (Ok, CreatedAtAction, BadRequest, NotFound, NoContent).
 
-        //Create
-        [HttpPost]
-        public IActionResult CreateProduct([FromBody] ProductCreateDTO productDTO)
-        {
-            var newProduct = new Product
-            {
-                Name = productDTO.Name,
-                Price = productDTO.Price,
-                Category = productDTO.Category,
-                Active = true
-            };
-
-            _productService.AddProduct(newProduct);
-
-            return Ok(newProduct);
-        }
-
         //Read
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAllProducts()
         {
             var products = _productService.GetAll();
-
             return Ok(products);
         }
 
@@ -72,28 +54,58 @@ namespace Practico_Bloque2_ApiGestion.Controllers
         }
 
         //Read by Category
-        [HttpGet("{category:string}")]
+        [HttpGet("{category}")]
         public IActionResult GetByCategory(string category)
         {
             var products = _productService.GetByCategory(category);
             return Ok(products);
         }
 
+        //Create
+        [HttpPost]
+        public IActionResult CreateProduct([FromBody] ProductCreateDTO productDTO)
+        {
+            try
+            {
+                _productService.AddProduct(productDTO);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(productDTO);
+        }
+
         //Update
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, [FromBody] ProductCreateDTO product)
+        public IActionResult UpdateProduct(int id, [FromBody] ProductCreateDTO productCreateDTO)
         {
-            var existingProduct = _productService.GetById(id);
-            if (existingProduct == null)
+
+            try
             {
-                return NotFound();
+                var existingProduct = _productService.GetById(id);
             }
-            else
+            catch (KeyNotFoundException ex)
             {
-                _productService.UpdateProduct(id, product);
-                return NoContent();
+                return NotFound(ex.Message);
             }
-            
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok();
         }
 
         //Delete
